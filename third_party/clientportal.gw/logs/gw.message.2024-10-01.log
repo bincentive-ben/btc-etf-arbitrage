@@ -1,0 +1,402 @@
+-> GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+<- 200 GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+-> GET /css/bootstrap-5.2.2/bootstrap.min.css
+-> GET /css/ibkr/theme-ibkr-portal.min.css
+-> GET /css/fontawesome-6.2.0/all.min.css
+-> GET /css/reg-am/login.min.css
+-> GET /css/bootstrap-switch-3.3.2/bootstrap-switch.min.css
+-> GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+<- 200 GET /css/bootstrap-5.2.2/bootstrap.min.css
+<- 200 GET /css/fontawesome-6.2.0/all.min.css
+<- 200 GET /css/bootstrap-switch-3.3.2/bootstrap-switch.min.css
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+-> GET /sso/lib/xyz.bundle.min.js
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css
+-> GET /images/2015/btn-app-apple.png
+-> GET /images/2015/btn-app-google.png
+<- 200 GET /sso/lib/xyz.bundle.min.js
+<- 200 GET /images/2015/btn-app-apple.png
+-> GET /images/2015/btn-app-tws.png
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+<- 200 GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+<- 200 GET /css/reg-am/login.min.css
+<- 200 GET /images/2015/btn-app-google.png
+-> GET /images/2015/button_discover_apis.png
+<- 200 GET /images/2015/btn-app-tws.png
+<- 200 GET /images/2015/button_discover_apis.png
+-> GET /images/web/favicons/home-screen-icon-192x192.png
+-> GET /images/common/logos/ibkr/interactive-brokers.svg
+-> GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+-> GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+-> GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+-> GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+<- 200 GET /images/web/favicons/home-screen-icon-192x192.png
+-> POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /images/common/logos/ibkr/interactive-brokers.svg
+-> GET /sso/images/2fa-animated-once.gif
+<- 200 GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+<- 200 GET /sso/images/2fa-animated-once.gif
+-> GET /images/web/favicons/home-screen-icon-192x192.png
+-> GET /images/web/favicons/home-screen-icon-128x128.png
+<- 200 GET /images/web/favicons/home-screen-icon-192x192.png
+<- 204 POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /images/web/favicons/home-screen-icon-128x128.png
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> GET /sso/images/2fa-animated-once.gif?q=0.06372488121679765
+-> GET /fonts/proxima-nova/proximanova-extrabold.woff2
+<- 200 GET /sso/images/2fa-animated-once.gif?q=0.06372488121679765
+<- 200 GET /fonts/proxima-nova/proximanova-extrabold.woff2
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Dispatcher
+<- 302 POST /sso/Dispatcher
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,200|713ms
+-> request: /v1/api/one/user
+-> request: /v1/api/ssodh/init
+-> sso GET https://api.ibkr.com/v1/api/ssodh/init
+-> GET /v1/api/one/user,200|442ms
+-> request: /v1/api/ssodh/st
+-> sso GET https://api.ibkr.com/v1/api/ssodh/st
+-> request: /sso/Authenticator?ACTION=PUBLISH_TST&RESP_TYPE=JSON&DEVICE_ID=0fb9ab02|6C-7E-67-D3-C4-91
+-> sso GET https://api.ibkr.com/sso/Authenticator?ACTION=PUBLISH_TST&RESP_TYPE=JSON&DEVICE_ID=0fb9ab02|6C-7E-67-D3-C4-91
+<- 200 GET https://api.ibkr.com/sso/Authenticator?ACTION=PUBLISH_TST&RESP_TYPE=JSON&DEVICE_ID=0fb9ab02|6C-7E-67-D3-C4-91 0
+-> request: /v1/api/iserver/auth/status
+-> GET /v1/api/iserver/auth/status,200|184ms
+-> request: /v1/api/iserver/auth/ssodh/init
+-> POST https://api.ibkr.com/v1/api/iserver/auth/ssodh/init,200|2573ms
+-> request: /v1/api/iserver/accounts
+-> GET /v1/api/iserver/accounts,200|213ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|540ms
+-> POST /sso/Dispatcher
+<- 302 POST /sso/Dispatcher
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,200|501ms
+-> request: /v1/api/one/user
+-> request: /v1/api/ssodh/init
+-> sso GET https://api.ibkr.com/v1/api/ssodh/init
+-> GET /v1/api/one/user,200|211ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|216ms
+-> POST /sso/Dispatcher
+<- 302 POST /sso/Dispatcher
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,200|217ms
+-> request: /v1/api/one/user
+-> request: /v1/api/ssodh/init
+-> sso GET https://api.ibkr.com/v1/api/ssodh/init
+-> GET /v1/api/one/user,200|217ms
+-> GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+<- 200 GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+-> GET /css/reg-am/login.min.css
+-> GET /css/ibkr/theme-ibkr-portal.min.css
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+-> GET /sso/lib/xyz.bundle.min.js
+-> GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+-> GET /images/2015/btn-app-apple.png
+<- 200 GET /sso/lib/xyz.bundle.min.js
+<- 200 GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+<- 200 GET /css/reg-am/login.min.css
+-> GET /images/2015/btn-app-google.png
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+<- 200 GET /images/2015/btn-app-apple.png
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css
+<- 200 GET /images/2015/btn-app-google.png
+-> GET /images/2015/btn-app-tws.png
+-> GET /images/2015/button_discover_apis.png
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+-> GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+-> GET /css/ibkr/theme-ibkr-portal.min.css.map
+-> GET /css/reg-am/login.min.css.map
+<- 200 GET /images/2015/btn-app-tws.png
+<- 200 GET /images/2015/button_discover_apis.png
+-> GET /images/common/logos/ibkr/interactive-brokers.svg
+-> GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+<- 200 GET /images/common/logos/ibkr/interactive-brokers.svg
+-> GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+<- 200 GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css.map
+-> GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+<- 200 GET /css/reg-am/login.min.css.map
+-> GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+-> POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+-> GET /images/web/favicons/home-screen-icon-192x192.png
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+-> GET /sso/images/2fa-animated-once.gif
+<- 200 GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+<- 200 GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+<- 200 GET /images/web/favicons/home-screen-icon-192x192.png
+<- 200 GET /sso/images/2fa-animated-once.gif
+<- 204 POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> GET /sso/images/2fa-animated-once.gif?q=0.26753482695891906
+-> GET /fonts/proxima-nova/proximanova-extrabold.woff2
+<- 200 GET /fonts/proxima-nova/proximanova-extrabold.woff2
+<- 200 GET /sso/images/2fa-animated-once.gif?q=0.26753482695891906
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|224ms
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> request: /v1/api/tickle
+-> POST /sso/Authenticator
+-> GET /v1/api/tickle,200|826ms
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> GET /sso/images/2fa-animated-once.gif?q=0.12825351686222253
+<- 200 GET /sso/images/2fa-animated-once.gif?q=0.12825351686222253
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+-> GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+-> request: /v1/api/tickle
+<- 200 POST /sso/Authenticator
+-> GET /v1/api/tickle,200|208ms
+<- 200 GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+-> GET /css/reg-am/login.min.css
+-> GET /css/ibkr/theme-ibkr-portal.min.css
+-> GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+-> GET /sso/lib/xyz.bundle.min.js
+<- 304 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+<- 304 GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+<- 200 GET /sso/lib/xyz.bundle.min.js
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css
+<- 200 GET /css/reg-am/login.min.css
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+-> GET /css/reg-am/login.min.css.map
+-> GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+-> GET /css/ibkr/theme-ibkr-portal.min.css.map
+-> GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+-> GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+-> GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+<- 200 GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+-> GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+<- 200 GET /css/reg-am/login.min.css.map
+-> POST /portal.proxy/v1/gstat/bulletins
+<- 304 GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+-> GET /images/web/favicons/home-screen-icon-192x192.png
+-> GET /sso/images/2fa-animated-once.gif
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+<- 200 GET /images/web/favicons/home-screen-icon-192x192.png
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+<- 204 POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css.map
+<- 200 GET /sso/images/2fa-animated-once.gif
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|217ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|427ms
+-> request: /v1/api/sso/validate?gw=1
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|188ms
+-> GET /v1/api/sso/validate?gw=1,401|218ms
+-> request: /v1/api/sso/validate?gw=1
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|223ms
+-> GET /v1/api/sso/validate?gw=1,401|228ms
+-> request: /v1/api/sso/validate?gw=1
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|212ms
+-> GET /v1/api/sso/validate?gw=1,401|213ms
+-> GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+<- 200 GET /sso/Login?forwardTo=22&RL=1&ip2loc=US
+-> GET /css/reg-am/login.min.css
+-> GET /css/ibkr/theme-ibkr-portal.min.css
+-> GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+-> GET /sso/lib/xyz.bundle.min.js
+<- 304 GET /scripts/common/js/jquery-3.7.0/jquery.min.js
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js
+<- 200 GET /sso/lib/xyz.bundle.min.js
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css
+<- 200 GET /css/reg-am/login.min.css
+-> GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+-> GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+-> GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+-> GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+-> GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+-> GET /css/ibkr/theme-ibkr-portal.min.css.map
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Light.woff2
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Semibold.woff2
+<- 304 GET /fonts/proxima-nova/Proxima-Nova-Regular.woff2
+-> POST /portal.proxy/v1/gstat/bulletins
+-> GET /images/web/favicons/home-screen-icon-192x192.png
+-> GET /css/reg-am/login.min.css.map
+<- 304 GET /fonts/fontawesome-6.4.2/webfonts/fa-solid-900.woff2
+-> GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+<- 200 GET /images/web/favicons/home-screen-icon-192x192.png
+<- 200 GET /scripts/common/js/bootstrap-5.2.2/bootstrap.bundle.min.js.map
+<- 200 GET /css/ibkr/theme-ibkr-portal.min.css.map
+<- 204 POST /portal.proxy/v1/gstat/bulletins
+<- 200 GET /css/bootstrap-5.2.2/bootstrap.min.css.map
+<- 200 GET /css/reg-am/login.min.css.map
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> GET /fonts/proxima-nova/proximanova-extrabold.woff2
+-> GET /sso/images/2fa-animated-once.gif?q=0.7822750973489376
+<- 304 GET /fonts/proxima-nova/proximanova-extrabold.woff2
+<- 200 GET /sso/images/2fa-animated-once.gif?q=0.7822750973489376
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> request: /sso/ping
+-> GET /sso/ping,200|723ms
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Authenticator
+<- 200 POST /sso/Authenticator
+-> POST /sso/Dispatcher
+<- 302 POST /sso/Dispatcher
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,200|1172ms
+-> request: /v1/api/one/user
+-> request: /v1/api/ssodh/init
+-> sso GET https://api.ibkr.com/v1/api/ssodh/init
+-> GET /v1/api/one/user,200|221ms
+-> request: /v1/api/ssodh/st
+-> sso GET https://api.ibkr.com/v1/api/ssodh/st
+-> request: /v1/api/iserver/auth/status
+-> GET /v1/api/iserver/auth/status,200|220ms
+-> request: /v1/api/iserver/accounts
+-> GET /v1/api/iserver/accounts,200|281ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|242ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|263ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|193ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|406ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|358ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|463ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|268ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|198ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|238ms
+-> request: /sso/ping
+-> GET /sso/ping,200|873ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|216ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|224ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|253ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|217ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|194ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|201ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|208ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|243ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|224ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|191ms
+-> request: /sso/ping
+-> GET /sso/ping,200|857ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,200|189ms
+-> request: /v1/api/tickle
+-> GET /v1/api/tickle,401|856ms
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|439ms
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|925ms
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|416ms
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|442ms
+-> request: /v1/api/sso/validate?gw=1
+-> GET /v1/api/sso/validate?gw=1,401|474ms
+-> request: /sso/ping
+-> GET /sso/ping,200|837ms
+-> request: /sso/ping
+-> GET /sso/ping,200|662ms
+-> request: /sso/ping
+-> GET /sso/ping,200|768ms
+-> request: /sso/ping
+-> GET /sso/ping,200|938ms
+-> request: /sso/ping
+-> request: /sso/ping
+-> GET /sso/ping,200|1170ms
+-> request: /sso/ping
+-> request: /sso/ping
+-> GET /sso/ping,200|1058ms
+-> request: /sso/ping
+-> GET /sso/ping,200|862ms
+-> request: /sso/ping
+-> request: /sso/ping
+-> GET /sso/ping,200|762ms
+-> request: /sso/ping
+-> request: /sso/ping
+-> GET /sso/ping,200|800ms
+-> request: /sso/ping
