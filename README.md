@@ -3,7 +3,7 @@ Application to find arbitrage opportunities between BTC and ETFs
 
 # Paper account information
     Username: vnaphx534
-    Password: Qaz5417777
+    Password: Qaz5418888
 
 # Environment setup
 * https://interactivebrokers.github.io/cpwebapi/quickstart
