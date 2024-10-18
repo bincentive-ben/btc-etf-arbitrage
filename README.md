@@ -3,10 +3,13 @@ Application to find arbitrage opportunities between BTC and ETFs
 
 # Paper account information
     Username: vnaphx534
-    Account Number: DUA774243
+    Password: Qaz5417777
 
 # Environment setup
 * https://interactivebrokers.github.io/cpwebapi/quickstart
+
+# Reset Paper password
+* https://brokerchooser.com/broker-reviews/interactive-brokers-review/paper-trading
 
 ## OAuth (not supported)
 ### Generation with openssl

@@ -1,35 +1,12 @@
-package ibkr
+package ibkr_http
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
-
-	"github.com/btc-etf-arbitrage/internal/config"
-	"github.com/go-resty/resty/v2"
 )
 
-type IBKRClient struct {
-	client  *resty.Client
-	baseUrl string
-	isPaper bool
-}
-
-// NewIBKRClient creates a new instance of IBKRClient
-func NewIBKRClient() *IBKRClient {
-
-	client := resty.New()
-	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-
-	return &IBKRClient{
-		client:  client,
-		baseUrl: config.AppConfig.IBKR.Endpoint,
-		isPaper: config.AppConfig.IBKR.IsPaper,
-	}
-}
-
 // GetAuthenticationStatus get authentication status to the Brokerage system.
-func (c *IBKRClient) GetAuthenticationStatus() (bool, error) {
+func (c *IBKRHttpClient) GetAuthenticationStatus() (bool, error) {
 	type Response struct {
 		Authenticated bool   `json:"authenticated"`
 		Competing     bool   `json:"competing"`
@@ -45,7 +22,7 @@ func (c *IBKRClient) GetAuthenticationStatus() (bool, error) {
 	}
 
 	resp, err := c.client.R().
-		Post(fmt.Sprintf("%s/iserver/auth/status", c.baseUrl))
+		Post(fmt.Sprintf("%s/iserver/auth/status", c.url))
 
 	if err != nil {
 		return false, err
@@ -65,13 +42,13 @@ func (c *IBKRClient) GetAuthenticationStatus() (bool, error) {
 }
 
 // Logout logout from the Brokerage system.
-func (c *IBKRClient) Logout() (string, error) {
+func (c *IBKRHttpClient) Logout() (string, error) {
 	type Response struct {
 		Status string `json:"status"`
 	}
 
 	resp, err := c.client.R().
-		Post(fmt.Sprintf("%s/logout", c.baseUrl))
+		Post(fmt.Sprintf("%s/logout", c.url))
 
 	if err != nil {
 		return "", err
@@ -91,7 +68,7 @@ func (c *IBKRClient) Logout() (string, error) {
 }
 
 // ValidateSession validates the current session for the SSO user.
-func (c *IBKRClient) ValidateSession() (bool, error) {
+func (c *IBKRHttpClient) ValidateSession() (bool, error) {
 	type Response struct {
 		LoginType int    `json:"LOGIN_TYPE"`
 		UserName  string `json:"USER_NAME"`
@@ -102,7 +79,7 @@ func (c *IBKRClient) ValidateSession() (bool, error) {
 	}
 
 	resp, err := c.client.R().
-		Get(fmt.Sprintf("%s/sso/validate", c.baseUrl))
+		Get(fmt.Sprintf("%s/sso/validate", c.url))
 
 	if err != nil {
 		return false, err
@@ -122,14 +99,14 @@ func (c *IBKRClient) ValidateSession() (bool, error) {
 }
 
 // GetMarketData fetches market data for a specific symbol (BTC or ETFs)
-func (c *IBKRClient) GetMarketData(symbol string) (float64, error) {
+func (c *IBKRHttpClient) GetMarketData(symbol string) (float64, error) {
 	var response struct {
 		Price float64 `json:"price"`
 	}
 
 	resp, err := c.client.R().
 		SetResult(&response).
-		Get(fmt.Sprintf("%s/marketdata/%s", c.baseUrl, symbol))
+		Get(fmt.Sprintf("%s/marketdata/%s", c.url, symbol))
 
 	if err != nil {
 		return 0, err
@@ -143,23 +120,52 @@ func (c *IBKRClient) GetMarketData(symbol string) (float64, error) {
 }
 
 // Tickle sends a tickle request to the API.
-func (c *IBKRClient) Tickle() error {
-	resp, err := c.client.R().
-		Post(fmt.Sprintf("%s/tickle", c.baseUrl))
+func (c *IBKRHttpClient) Tickle() (string, error) {
+	type Response struct {
+		Session    string `json:"session"`
+		SSOExpires int    `json:"ssoExpires"`
+		Collision  bool   `json:"collision"`
+		UserID     int    `json:"userId"`
+		HMDS       struct {
+			Error string `json:"error"`
+		} `json:"hmds"`
+		IServer struct {
+			AuthStatus struct {
+				Authenticated bool   `json:"authenticated"`
+				Competing     bool   `json:"competing"`
+				Connected     bool   `json:"connected"`
+				Message       string `json:"message"`
+				MAC           string `json:"MAC"`
+				ServerInfo    struct {
+					ServerName    string `json:"serverName"`
+					ServerVersion string `json:"serverVersion"`
+				} `json:"serverInfo"`
+				HardwareInfo string `json:"hardware_info"`
+			} `json:"authStatus"`
+		} `json:"iserver"`
+	}
 
+	resp, err := c.client.R().
+		Post(fmt.Sprintf("%s/tickle", c.url))
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if resp.IsError() {
-		return fmt.Errorf("failed to send tickle request")
+		return "", fmt.Errorf("failed to send tickle request, status code: %v, error: %v", resp.StatusCode(), resp.Error())
 	}
 
-	return nil
+	var response Response
+	err = json.Unmarshal(resp.Body(), &response)
+	if err != nil {
+		return "", err
+	}
+
+	return response.Session, nil
 }
 
 // Reauthenticate reauthenticates the session with the Brokerage system.
-func (c *IBKRClient) Reauthenticate() (bool, error) {
+func (c *IBKRHttpClient) Reauthenticate() (bool, error) {
 	type Response struct {
 		Authenticated bool     `json:"authenticated"`
 		Competing     bool     `json:"competing"`
@@ -170,7 +176,7 @@ func (c *IBKRClient) Reauthenticate() (bool, error) {
 	}
 
 	resp, err := c.client.R().
-		Post(fmt.Sprintf("%s/iserver/reauthenticate", c.baseUrl))
+		Post(fmt.Sprintf("%s/iserver/reauthenticate", c.url))
 
 	if err != nil {
 		return false, err

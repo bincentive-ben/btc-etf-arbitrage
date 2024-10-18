@@ -1,4 +1,4 @@
-# run Client Portal API GatewayCopy Location
+# Run Client Portal API Gateway
 runPortal:
 	cd third_party/clientportal.gw/ && ./bin/run.sh root/conf.yaml
 	cd -

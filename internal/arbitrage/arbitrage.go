@@ -17,6 +17,6 @@ func NewArbitrage() (*Arbitrage, error) {
 
 	return &Arbitrage{
 		cfg:    cfg,
-		Logger: zerolog.New(os.Stderr).Level(zerolog.InfoLevel).With().Timestamp().Logger(),
+		Logger: zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger(),
 	}, nil
 }

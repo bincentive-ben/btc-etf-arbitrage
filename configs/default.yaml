@@ -1,3 +1,73 @@
-IBKR:
-  Endpoint: "https://localhost:5001/v1/api"
-  IsPaper: true
+AppConfig:
+  IBKR:
+    Http:
+      Endpoint: "https://localhost:5001/v1/api"
+    Websocket:
+      Endpoint: "wss://localhost:5001/v1/api/ws"
+    # LastPrice, Symbol, BidPrice, AskPrice
+    Fields: [31, 55, 84, 86]
+StrategyConfig:
+  BasicSettings:
+    Symbol: "BTC"
+    Run: true
+    RunSeconds: 60
+  SetUsd:
+    BidAskTicks: 2
+    UsdRatioFromOB: 0.5
+    MaxUsd: 2000
+    # AvgBidAskOrdebookSize: # 美股ETF委託簿bid&ask前bid_ask_ticks檔均量 * UsdRatiofromOB
+    # Usd:                    # usd = min(avg_bid_ask_orderbook_size,maxUSD)
+  StrategySettings:
+    UsdtConvert : false
+    # use for searching securities contract ID only
+
+    # ETH "ARKY", "ETHV", "ETHE", "ETHA", "SATO", "FETH"
+    #     [665640735, 717810521, 372707395, 717828992, 519322274, 717324491]
+    TickerList: ["IBIT", "FBTC", "GBTC", "BITB", "ARKB", "BRRR", "EZBC", "HODL", "BTCW", "BTCO"]
+    # Use contract ID for listing ticker
+    ContractIDList: [677037673, 676783301, 349966059, 677037658, 677037663, 677037676, 676783282, 677037670, 676783288, 677037667]
+    EntrySide: "Both"  ## LongOnly/ShortOnly/Both/Stop
+    TakerFirst: false
+    TakerSecond: true
+    ProfitRate:
+      Long:
+        ProfitRateLongEntry: -0.3
+        ProfitRateLongExit: 0.1
+      Short:
+        ProfitRateShortEntry: 0.5
+        ProfitRateShortExit: -0.0
+      # Long(逆價差作多)
+      #   profit_rate_long_entry : -0.3%
+      #   profit_rate_long_exit : +0.1%
+      # Short(正價差作空)
+      #   profit_rate_short_entry : +0.5%
+      #   profit_rate_short_exit : -0.0%
+    HedgeType:
+      LongHedgeType: "Binance-PERP"
+      ShortHedgeType: "Binance-Spot"
+TraderConfig: # (控制StrategyConfig: 動態調整ProfitRate & 規定庫存建立方向)
+  Timer: #(策略開啟時間)
+    StartTime: # 美股開盤後N分鐘
+    EndTime: # 美股收盤前N分鐘
+    StopTime: 202500:203500
+  Inventory: #看當前持倉狀況來調整開倉方向 & 預測未來一段時間spread狀況調整ProfitRate
+    EntrySide:
+      MaxNetDelta: 0.5   # IB正負持倉超過0.75x就會關閉此建倉方向
+      MaxTotalDelta: 1.5 # IB總持倉超過1.5x就不在建新倉
+    ProfitRate:
+      entry_rate: 0.4
+      exit_rate: 0
+      punish_entry_rate: 0.1
+      punish_exit_rate: 0.05
+      punish_unit_per_lvg: 0.25
+      # (每超過0.25倍淨槓桿exit_rate退0.05%，同時另一邊entry_rate放寬 0.1%)
+  HedgeType: # 看過去一段時間FR狀況決定避險種類
+    FR_Hours: 24
+    FR_bar: 0
+  RiskControl: # 雙邊持倉風險控制 超過直接改taker平倉
+    RiskCondition:
+      MaxNetDelta: 1.5
+      MaxTotalDelta: 2.2
+
+
+
