@@ -1,0 +1,16 @@
+V ticker: IBIT, index: 0, conid: 677037673 companyHeader: ISHARES BITCOIN TRUST ETF - NASDAQ, companyName: ISHARES BITCOIN TRUST ETF
+V ticker: FBTC, index: 1, conid: 676783301 companyHeader: FIDELITY WISE ORIGIN BITCOIN - BATS, companyName: FIDELITY WISE ORIGIN BITCOIN
+V ticker: GBTC, index: 0, conid: 349966059 companyHeader: GRAYSCALE BITCOIN TRUST BTC - ARCA, companyName: GRAYSCALE BITCOIN TRUST BTC
+V ticker: BITB, index: 0, conid: 677037658 companyHeader: BITWISE BITCOIN ETF - ARCA, companyName: BITWISE BITCOIN ETF
+V ticker: ARKB, index: 0, conid: 677037663 companyHeader: ARK 21SHARES BITCOIN ETF - BATS, companyName: ARK 21SHARES BITCOIN ETF
+V ticker: BRRR, index: 0, conid: 677037676 companyHeader: COINSHARES VALKYRIE BITCOIN - NASDAQ, companyName: COINSHARES VALKYRIE BITCOIN
+V ticker: EZBC, index: 0, conid: 676783282 companyHeader: FRANKLIN BITCOIN ETF - BATS, companyName: FRANKLIN BITCOIN ETF
+V ticker: HODL, index: 1, conid: 677037670 companyHeader: VANECK BITCOIN ETF-USD INC - BATS, companyName: VANECK BITCOIN ETF-USD INC
+V ticker: BTCW, index: 1, conid: 676783288 companyHeader: WISDOMTREE BITCOIN FUND - BATS, companyName: WISDOMTREE BITCOIN FUND
+V ticker: BTCO, index: 0, conid: 677037667 companyHeader: INVSCO GLXY BTCN ETF - BATS, companyName: INVSCO GLXY BTCN ETF
+V ticker: ARKY, index: 0, conid: 665640735 companyHeader: ARK 21SHRS ACTBITC ETH STRGY - BATS, companyName: ARK 21SHRS ACTBITC ETH STRGY
+V Vticker: ETHV, index: 0, conid: 717810521 companyHeader: VANECK ETHEREUM ETF - BATS, companyName: VANECK ETHEREUM ETF
+V ticker: ETHE, index: 0, conid: 372707395 companyHeader: GRAYSCALE ETHEREUM TRUST - ARCA, companyName: GRAYSCALE ETHEREUM TRUST
+V ticker: ETHA, index: 0, conid: 717828992 companyHeader: ISHARES ETHEREUM TRUST ETF - NASDAQ, companyName: ISHARES ETHEREUM TRUST ETF
+V ticker: SATO, index: 1, conid: 519322274 companyHeader: INVESCO ALERIAN GALAXY CRYPT - BATS, companyName: INVESCO ALERIAN GALAXY CRYPT
+V ticker: FETH, index: 1, conid: 717324491 companyHeader: FIDELITY ETHEREUM FUND - BATS, companyName: FIDELITY ETHEREUM FUND

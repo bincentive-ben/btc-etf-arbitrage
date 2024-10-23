@@ -7,8 +7,8 @@ AppConfig:
     ExchangeID: "Binance"
     RestEndpoint: "https://api.binance.com"
     WsEndpoint: "wss://stream.binance.com"
-    ApiKey: "makoLPxek8FSkY5WxHWBFom3rI0sereOUd42rbaC6FernLbIkzjungaqXlGzbMYv"
-    SecretKey: "RplM3VKMllUtSyCtknSgd0BE00ZEUfrjoE2SHmaAbpjZFhnefJvjivKbSe7r4Wp8"
+    ApiKey: ""
+    SecretKey: ""
     Type: "Spot"
 StrategyConfig:
   BasicSettings:
