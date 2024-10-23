@@ -1,11 +1,15 @@
 AppConfig:
   IBKR:
-    Http:
-      Endpoint: "https://localhost:5001/v1/api"
-    Websocket:
-      Endpoint: "wss://localhost:5001/v1/api/ws"
-    # LastPrice, Symbol, BidPrice, AskPrice
+    RestEndpoint: "https://localhost:5001/v1/api"
+    WsEndpoint: "wss://localhost:5001/v1/api/ws"
     Fields: [31, 55, 84, 86]
+  Binance:
+    ExchangeID: "Binance"
+    RestEndpoint: "https://api.binance.com"
+    WsEndpoint: "wss://stream.binance.com"
+    ApiKey: "makoLPxek8FSkY5WxHWBFom3rI0sereOUd42rbaC6FernLbIkzjungaqXlGzbMYv"
+    SecretKey: "RplM3VKMllUtSyCtknSgd0BE00ZEUfrjoE2SHmaAbpjZFhnefJvjivKbSe7r4Wp8"
+    Type: "Spot"
 StrategyConfig:
   BasicSettings:
     Symbol: "BTC"

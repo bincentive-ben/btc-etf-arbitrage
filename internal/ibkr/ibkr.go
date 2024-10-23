@@ -25,10 +25,11 @@ func NewIBKRClient() *IBKRClient {
 
 	httpClient := ibkr_http.NewIBKRHttpClient()
 
-	wsClient, err := ibkr_websocket.NewIBKRWebsocketClient(ibkrConfig.AppConfig.IBKR.Websocket.Endpoint)
+	wsClient, err := ibkr_websocket.NewIBKRWebsocketClient(ibkrConfig.AppConfig.IBKR.WsEndpoint)
 	if err != nil {
 		panic(err)
 	}
+
 	scheduler := gocron.NewScheduler(time.UTC)
 
 	// Ping session to keep the session alive every minute

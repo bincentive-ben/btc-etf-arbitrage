@@ -20,6 +20,6 @@ func NewIBKRHttpClient() *IBKRHttpClient {
 
 	return &IBKRHttpClient{
 		client: httpClient,
-		url:    config.ArbitrageConfig.AppConfig.IBKR.Http.Endpoint,
+		url:    config.ArbitrageConfig.AppConfig.IBKR.RestEndpoint,
 	}
 }

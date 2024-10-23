@@ -9,14 +9,19 @@ import (
 
 type AppConfig struct {
 	IBKR struct {
-		Http struct {
-			Endpoint string `mapstructure:"Endpoint"`
-		} `mapstructure:"Http"`
-		Websocket struct {
-			Endpoint string `mapstructure:"Endpoint"`
-		} `mapstructure:"Websocket"`
-		Fields []string `mapstructure:"Fields"`
+		RestEndpoint string   `mapstructure:"RestEndpoint"`
+		WsEndpoint   string   `mapstructure:"WsEndpoint"`
+		Fields       []string `mapstructure:"Fields"`
 	} `mapstructure:"IBKR"`
+
+	Binance struct {
+		ExchangeID   string `mapstructure:"ExchangeID"`
+		RestEndpoint string `mapstructure:"RestEndpoint"`
+		WsEndpoint   string `mapstructure:"WsEndpoint"`
+		ApiKey       string `mapstructure:"ApiKey"`
+		SecretKey    string `mapstructure:"SecretKey"`
+		Type         string `mapstructure:"Type"`
+	} `mapstructure:"Binance"`
 }
 
 type BasicSettings struct {
