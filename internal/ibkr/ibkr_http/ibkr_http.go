@@ -12,7 +12,7 @@ type IBKRHttpClient struct {
 	url    string
 }
 
-// NewIBKRHttpClient creates a new instance of IBKRClient
+// NewIBKRHttpClient creates a new instance of IbkrClient
 func NewIBKRHttpClient() *IBKRHttpClient {
 
 	httpClient := resty.New()
@@ -20,6 +20,6 @@ func NewIBKRHttpClient() *IBKRHttpClient {
 
 	return &IBKRHttpClient{
 		client: httpClient,
-		url:    config.ArbitrageConfig.AppConfig.IBKR.RestEndpoint,
+		url:    config.GetAppConfig().IbkrConfig.RestEndpoint,
 	}
 }

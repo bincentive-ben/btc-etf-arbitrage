@@ -7,11 +7,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/btc-etf-arbitrage/internal/arbitrage"
 	"github.com/btc-etf-arbitrage/internal/config"
 	"github.com/btc-etf-arbitrage/internal/ibkr"
 	"github.com/btc-etf-arbitrage/internal/ibkr/common"
 	"github.com/btc-etf-arbitrage/internal/ibkr/ibkr_websocket"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -22,16 +22,13 @@ var GetIServerMarketDataSnapshotCmd = &cobra.Command{
 	Short: "Get market data snapshot",
 	Long:  "Get market data snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
-		arb, err := arbitrage.NewArbitrage()
-		if err != nil {
-			panic(err)
-		}
-		log := arb.Logger
+		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-		contractIDs := config.GetConfig().StrategyConfig.StrategySettings.ContractIDList
-		fields := config.GetConfig().AppConfig.IBKR.Fields
+		contractIDs := config.GetAppConfig().IbkrConfig.ContractIDList
+		fields := config.GetAppConfig().IbkrConfig.Fields
 		var marketDataSnapshot []common.MarketDataSnapshot
-		ibkrClient := ibkr.NewIBKRClient()
+		var err error
+		ibkrClient := ibkr.NewIBKRClient(logger)
 
 		if IsWebsocket {
 			defer ibkrClient.WsClient.Close()
@@ -51,7 +48,7 @@ var GetIServerMarketDataSnapshotCmd = &cobra.Command{
 		} else {
 			marketDataSnapshot, err = ibkrClient.HttpClient.GetIServerMarketDataSnapshot(contractIDs, 0, fields)
 			if err != nil {
-				log.Error().Msgf("%v", err)
+				logger.Error().Msgf("%v", err)
 				return
 			}
 
@@ -71,13 +68,9 @@ var GetIServerMarketDataHistoryCmd = &cobra.Command{
 	Short: "Get market data history",
 	Long:  "Get market data history",
 	Run: func(cmd *cobra.Command, args []string) {
-		arb, err := arbitrage.NewArbitrage()
-		if err != nil {
-			panic(err)
-		}
-		log := arb.Logger
+		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-		ibkrClient := ibkr.NewIBKRClient()
+		ibkrClient := ibkr.NewIBKRClient(logger)
 		fmt.Println("ibkrClient:", ibkrClient)
 		if IsWebsocket {
 			defer ibkrClient.WsClient.Close()
@@ -99,10 +92,10 @@ var GetIServerMarketDataHistoryCmd = &cobra.Command{
 			}
 
 		} else {
-			log.Debug().Msgf("Not done yet")
+			logger.Debug().Msgf("Not done yet")
 			// marketDataHistory, err = ibkrClient.HttpClient.GetIServerMarketDataHistory(contractIDs, 0, fields)
 			// if err != nil {
-			// 	log.Error().Msgf("%v", err)
+			// 	logger.Error().Msgf("%v", err)
 			// 	return
 			// }
 		}

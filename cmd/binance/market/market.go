@@ -7,8 +7,8 @@ import (
 	"syscall"
 
 	"github.com/bincentive-ben/exchange"
-	"github.com/btc-etf-arbitrage/internal/arbitrage"
 	"github.com/btc-etf-arbitrage/internal/binance"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -19,13 +19,8 @@ var GetTickerPrice = &cobra.Command{
 	Short: "Get ticker price",
 	Long:  "Get ticker price",
 	Run: func(cmd *cobra.Command, args []string) {
-		arb, err := arbitrage.NewArbitrage()
-		if err != nil {
-			panic(err)
-		}
-		log := arb.Logger
-
-		client := binance.NewBinanceClient()
+		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
+		client := binance.NewBinanceClient(logger)
 		if IsWebsocket {
 			ctx, cancel := signal.NotifyContext(
 				context.Background(),
@@ -34,7 +29,7 @@ var GetTickerPrice = &cobra.Command{
 			)
 
 			receiver := make(chan interface{}, 128)
-			err = client.SpotExchange.Subscribe(exchange.Subscribe{
+			err := client.Exchange.Subscribe(exchange.Subscribe{
 				Topic: exchange.TopicOrderBook,
 				Param: map[string]interface{}{
 					"Depth": 5,
@@ -51,7 +46,7 @@ var GetTickerPrice = &cobra.Command{
 					case c := <-receiver:
 						switch t := c.(type) {
 						case exchange.OrderBook:
-							log.Debug().Msgf("OrderBook: %v", t)
+							logger.Debug().Msgf("OrderBook: %v", t)
 						}
 					}
 				}
@@ -60,13 +55,13 @@ var GetTickerPrice = &cobra.Command{
 			<-ctx.Done()
 			cancel()
 		} else {
-			orderBook, err := client.SpotExchange.GetOrderBook(context.Background(), "BTCUSDT")
+			orderBook, err := client.Exchange.GetOrderBook(context.Background(), "BTCUSDT")
 			if err != nil {
-				log.Error().Msgf("%v", err)
+				logger.Error().Msgf("%v", err)
 				return
 			}
 
-			log.Info().Msgf("orderBook %v", orderBook)
+			logger.Info().Msgf("orderBook %v", orderBook)
 		}
 
 	},

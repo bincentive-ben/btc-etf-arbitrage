@@ -5,17 +5,19 @@ import (
 	"github.com/bincentive-ben/exchange/binance"
 	"github.com/bincentive-ben/exchange/common"
 	"github.com/btc-etf-arbitrage/internal/config"
+	"github.com/rs/zerolog"
 )
 
 type BinanceClient struct {
-	SpotExchange *common.AsyncExchange
-	Config       *config.Config
+	Exchange *common.AsyncExchange
+	Config   *config.BinanceConfig
+	logger   zerolog.Logger
 }
 
 // NewBinanceClient creates a new instance of BinanceClient
-func NewBinanceClient() *BinanceClient {
-	cfg := config.GetConfig()
-	binanceConfig := cfg.AppConfig.Binance
+func NewBinanceClient(logger zerolog.Logger) *BinanceClient {
+	cfg := config.GetAppConfig()
+	binanceConfig := cfg.BinanceConfig
 
 	account := exchange.ExchangeAccount{
 		ExchangeID:   binanceConfig.ExchangeID,
@@ -26,6 +28,30 @@ func NewBinanceClient() *BinanceClient {
 	}
 
 	return &BinanceClient{
-		SpotExchange: binance.NewSpotExchange(account),
+		Exchange: binance.NewSpotExchange(account),
+		logger:   logger.With().Str("component", "binance").Logger(),
 	}
+}
+
+func (c *BinanceClient) SubscribeExchange(receiver chan interface{}) error {
+	c.logger.Debug().Msg("Start SubscribeExchange")
+
+	subscribe := exchange.Subscribe{
+		Topic:  exchange.TopicOrderBook,
+		Symbol: "BTCUSDT",
+		Param: map[string]interface{}{
+			"Depth": 5,
+		},
+	}
+
+	err := c.Exchange.Subscribe(subscribe, receiver)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *BinanceClient) Subscribe(sub exchange.Subscribe, receiver chan interface{}) error {
+	return b.Exchange.Subscribe(sub, receiver)
 }

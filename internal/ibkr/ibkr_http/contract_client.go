@@ -26,7 +26,6 @@ type Securities struct {
 }
 
 func (c *IBKRHttpClient) SearchIServerSecuriies(tickerList []string) error {
-	fmt.Println("tickerList:", tickerList)
 
 	for _, ticker := range tickerList {
 		securities, err := c.SearchIServerSecurity(ticker)

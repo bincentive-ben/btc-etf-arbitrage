@@ -6,26 +6,25 @@ import (
 	"github.com/btc-etf-arbitrage/internal/config"
 	"github.com/btc-etf-arbitrage/internal/ibkr/ibkr_http"
 	"github.com/btc-etf-arbitrage/internal/ibkr/ibkr_websocket"
+	"github.com/rs/zerolog"
 
 	"github.com/go-co-op/gocron"
 )
 
-type IBKRClient struct {
-	HttpClient *ibkr_http.IBKRHttpClient
-	WsClient   *ibkr_websocket.IBKRWebsocketClient
-	Scheduler  *gocron.Scheduler
-	Config     *config.Config
-
+type IbkrClient struct {
+	HttpClient      *ibkr_http.IBKRHttpClient
+	WsClient        *ibkr_websocket.IBKRWebsocketClient
+	Scheduler       *gocron.Scheduler
+	Config          *config.AppConfig
+	logger          zerolog.Logger
 	AuthenticatedCh chan bool
 }
 
-// NewIBKRClient creates a new instance of IBKRClient
-func NewIBKRClient() *IBKRClient {
-	ibkrConfig := config.GetConfig()
-
+// NewIBKRClient creates a new instance of IbkrClient
+func NewIBKRClient(logger zerolog.Logger) *IbkrClient {
+	appConfig := config.GetAppConfig()
 	httpClient := ibkr_http.NewIBKRHttpClient()
-
-	wsClient, err := ibkr_websocket.NewIBKRWebsocketClient(ibkrConfig.AppConfig.IBKR.WsEndpoint)
+	wsClient, err := ibkr_websocket.NewIBKRWebsocketClient(appConfig.IbkrConfig.WsEndpoint)
 	if err != nil {
 		panic(err)
 	}
@@ -36,11 +35,12 @@ func NewIBKRClient() *IBKRClient {
 	scheduler.Every(1).Minutes().Do(wsClient.PingSession)
 	scheduler.StartAsync()
 
-	return &IBKRClient{
+	return &IbkrClient{
 		HttpClient:      httpClient,
 		WsClient:        wsClient,
 		Scheduler:       scheduler,
-		Config:          &config.ArbitrageConfig,
+		Config:          &appConfig,
 		AuthenticatedCh: make(chan bool),
+		logger:          logger.With().Str("component", "ibkr").Logger(),
 	}
 }

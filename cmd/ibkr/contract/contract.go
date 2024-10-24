@@ -1,9 +1,11 @@
 package cmd
 
 import (
-	"github.com/btc-etf-arbitrage/internal/arbitrage"
+	"os"
+
 	"github.com/btc-etf-arbitrage/internal/config"
 	"github.com/btc-etf-arbitrage/internal/ibkr"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -12,17 +14,14 @@ var SearchIServerSecuritiesCmd = &cobra.Command{
 	Short: "Search securities of from 'StrategyConfig->StrategySettings->TickerList'",
 	Long:  "Search securities of from 'StrategyConfig->StrategySettings->TickerList'",
 	Run: func(cmd *cobra.Command, args []string) {
-		arb, err := arbitrage.NewArbitrage()
-		if err != nil {
-			panic(err)
-		}
-		log := arb.Logger
+		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-		ibrkClient := ibkr.NewIBKRClient()
-		tickerList := config.GetConfig().StrategyConfig.StrategySettings.TickerList
-		err = ibrkClient.HttpClient.SearchIServerSecuriies(tickerList)
+		ibrkClient := ibkr.NewIBKRClient(logger)
+		tickerList := config.GetAppConfig().IbkrConfig.TickerList
+
+		err := ibrkClient.HttpClient.SearchIServerSecuriies(tickerList)
 		if err != nil {
-			log.Error().Msgf("%v", err)
+			logger.Error().Msgf("%v", err)
 			return
 		}
 
