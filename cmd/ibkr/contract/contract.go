@@ -14,9 +14,10 @@ var SearchIServerSecuritiesCmd = &cobra.Command{
 	Short: "Search securities of from 'StrategyConfig->StrategySettings->TickerList'",
 	Long:  "Search securities of from 'StrategyConfig->StrategySettings->TickerList'",
 	Run: func(cmd *cobra.Command, args []string) {
+		ibkrConfig := config.GetAppConfig().IbkrConfig
 		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-		ibrkClient := ibkr.NewIBKRClient(logger)
+		ibrkClient := ibkr.NewIBKRClient(ibkrConfig, logger)
 		tickerList := config.GetAppConfig().IbkrConfig.TickerList
 
 		err := ibrkClient.HttpClient.SearchIServerSecuriies(tickerList)

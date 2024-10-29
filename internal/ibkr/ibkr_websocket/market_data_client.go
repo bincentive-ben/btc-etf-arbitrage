@@ -20,7 +20,7 @@ type HistoricalDataRequest struct {
 	Format     string
 }
 
-func (client *IBKRWebsocketClient) SubscribeStreamingData(request StreamingDataRequest) {
+func (client *IBKRWebsocketClient) SubscribeStreamingData(request StreamingDataRequest) error {
 	fieldsStr := `["` + strings.Join(request.Fields, `","`) + `"]`
 
 	message := []byte(`smd+` + request.Conid + `+{
@@ -29,10 +29,15 @@ func (client *IBKRWebsocketClient) SubscribeStreamingData(request StreamingDataR
 
 	fmt.Println(string(message))
 
-	client.Write(message)
+	err := client.Write(message)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (client *IBKRWebsocketClient) SubscribeHistoricalData(request HistoricalDataRequest) {
+func (client *IBKRWebsocketClient) SubscribeHistoricalData(request HistoricalDataRequest) error {
 	message := []byte(`smh+` + request.Conid + `+{
 		"period": "` + request.Period + `",
 		"bar": "` + request.Bar + `", 
@@ -40,5 +45,32 @@ func (client *IBKRWebsocketClient) SubscribeHistoricalData(request HistoricalDat
 		"format": "` + request.Format + `"
 	}`)
 
-	client.Write(message)
+	err := client.Write(message)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (client *IBKRWebsocketClient) SubscribeLiveOrderUpdate() error {
+	message := []byte(`sor+{}`)
+
+	err := client.Write(message)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (client *IBKRWebsocketClient) SubscribeTrades() error {
+	message := []byte(`str+{}`)
+
+	err := client.Write(message)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

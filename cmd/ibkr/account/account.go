@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/btc-etf-arbitrage/internal/config"
 	"github.com/btc-etf-arbitrage/internal/ibkr"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
@@ -13,8 +14,9 @@ var GetIServerAccountsCmd = &cobra.Command{
 	Short: "Get brokerage accounts",
 	Long:  "Get brokerage accounts",
 	Run: func(cmd *cobra.Command, args []string) {
+		ibkrConfig := config.GetAppConfig().IbkrConfig
 		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
-		ibrkClient := ibkr.NewIBKRClient(logger)
+		ibrkClient := ibkr.NewIBKRClient(ibkrConfig, logger)
 		result, err := ibrkClient.HttpClient.GetIServerAccounts()
 		if err != nil {
 			logger.Error().Msgf("%v", err)

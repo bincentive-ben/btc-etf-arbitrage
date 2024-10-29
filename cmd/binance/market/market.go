@@ -46,7 +46,8 @@ var GetTickerPrice = &cobra.Command{
 					case c := <-receiver:
 						switch t := c.(type) {
 						case exchange.OrderBook:
-							logger.Debug().Msgf("OrderBook: %v", t)
+							logger.Debug().Msgf("OrderBook: bids %v", t.Bids)
+							logger.Debug().Msgf("OrderBook: asks %v", t.Asks)
 						}
 					}
 				}

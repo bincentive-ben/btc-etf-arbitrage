@@ -6,7 +6,7 @@ DiscordConfig:
 IbkrConfig:
   RestEndpoint: "https://localhost:5001/v1/api"
   WsEndpoint: "wss://localhost:5001/v1/api/ws"
-  Fields: [31, 55, 84, 86]
+  Fields: [86, 84]
   TickerList: ["IBIT", "FBTC", "GBTC", "BITB", "ARKB", "BRRR", "EZBC", "HODL", "BTCW", "BTCO"]
   ContractIDList: [677037673, 676783301, 349966059, 677037658, 677037663, 677037676, 676783282, 677037670, 676783288, 677037667]
 BinanceConfig:

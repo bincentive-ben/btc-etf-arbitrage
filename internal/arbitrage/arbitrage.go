@@ -7,10 +7,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bincentive-ben/exchange"
 	"github.com/btc-etf-arbitrage/internal/binance"
 	"github.com/btc-etf-arbitrage/internal/config"
 	"github.com/btc-etf-arbitrage/internal/ibkr"
+
 	"github.com/go-co-op/gocron"
 	"github.com/rs/zerolog"
 )
@@ -29,15 +29,19 @@ func NewArbitrage() (*Arbitrage, error) {
 	traderConfig := config.GetTraderConfig()
 	scheduler := gocron.NewScheduler(time.UTC)
 
-	logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
+	logFile, _ := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	multi := zerolog.MultiLevelWriter(os.Stdout, logFile)
+
+	logger := zerolog.New(multi).Level(zerolog.DebugLevel).With().Time("time", time.Now()).Logger()
+	// logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
 	return &Arbitrage{
 		appConfig:     appConfig,
 		traderConfig:  traderConfig,
-		ibkrClient:    ibkr.NewIBKRClient(logger),
+		ibkrClient:    ibkr.NewIBKRClient(appConfig.IbkrConfig, logger),
 		binanceClient: binance.NewBinanceClient(logger),
 		scheduler:     scheduler,
-		logger:        logger.With().Str("component", "arbitrage").Timestamp().Logger(),
+		logger:        logger.With().Str("app", "arbitrage").Logger(),
 	}, nil
 }
 
@@ -49,17 +53,24 @@ func (a *Arbitrage) Run() error {
 		syscall.SIGTERM, // SIGTERM
 	)
 
-	receiver := make(chan interface{}, 128)
+	ibkrReceiver := make(chan interface{}, 128)
+	binanceReceiver := make(chan interface{}, 128)
 
-	err := a.SubscribeBinanceExchange(receiver)
+	err := a.ProcessMessage(ibkrReceiver, binanceReceiver)
 	if err != nil {
-		a.logger.Err(err).Msg("Error subscribe binance exchange")
+		a.logger.Err(err).Msg("Error process message")
 		return err
 	}
 
-	err = a.ProcessMessage(receiver)
+	// err = a.SubscribeBinanceExchange(binanceReceiver)
+	// if err != nil {
+	// 	a.logger.Err(err).Msg("Error subscribe binance exchange")
+	// 	return err
+	// }
+
+	err = a.SubscribeIbkrExchange(ibkrReceiver)
 	if err != nil {
-		a.logger.Err(err).Msg("Error process message")
+		a.logger.Err(err).Msg("Error subscribe ibkr exchange")
 		return err
 	}
 
@@ -119,20 +130,23 @@ func (a *Arbitrage) SubscribeBinanceExchange(receiver chan interface{}) error {
 	return nil
 }
 
-func (a *Arbitrage) ProcessMessage(receiver chan interface{}) error {
-	a.logger.Debug().Msg("Start ProcessMessage")
+func (a *Arbitrage) SubscribeIbkrExchange(receiver chan interface{}) error {
+	a.logger.Debug().Msg("Start SubscribeIbkrExchange")
 
-	go func() {
-		for {
-			select {
-			case c := <-receiver:
-				switch t := c.(type) {
-				case exchange.OrderBook:
-					a.logger.Debug().Msgf("Binance OrderBook: %v", t)
-				}
-			}
-		}
-	}()
+	client := a.GetIbkrClient()
+	go client.StartListening(receiver)
+
+	err := client.SubscribeExchange(receiver)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *Arbitrage) ProcessMessage(ibkrReceiver, binanceReceiver chan interface{}) error {
+	go a.ibkrClient.ProcessMessage(ibkrReceiver)
+	go a.binanceClient.ProcessMessage(binanceReceiver)
 
 	return nil
 }

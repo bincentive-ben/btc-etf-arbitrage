@@ -2,11 +2,10 @@ package ibkr_websocket
 
 import (
 	"crypto/tls"
-	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
+	"github.com/rs/zerolog"
 )
 
 type IBKRWebsocketClient struct {
@@ -14,22 +13,10 @@ type IBKRWebsocketClient struct {
 	url           string
 	done          chan struct{}
 	Authenticated chan bool
+	logger        zerolog.Logger
 }
 
-type StsMessage struct {
-	Topic string `json:"topic"`
-	Args  struct {
-		Authenticated bool   `json:"authenticated"`
-		Competing     bool   `json:"competing"`
-		Message       string `json:"message"`
-		Fail          string `json:"fail"`
-		ServerName    string `json:"serverName"`
-		ServerVersion string `json:"serverVersion"`
-		Username      string `json:"username"`
-	} `json:"args"`
-}
-
-func NewIBKRWebsocketClient(wsUrl string) (*IBKRWebsocketClient, error) {
+func NewIBKRWebsocketClient(wsUrl string, logger zerolog.Logger) (*IBKRWebsocketClient, error) {
 	dialer := websocket.Dialer{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
@@ -46,7 +33,18 @@ func NewIBKRWebsocketClient(wsUrl string) (*IBKRWebsocketClient, error) {
 		conn:          conn,
 		url:           wsUrl,
 		Authenticated: make(chan bool),
+		logger:        logger.With().Str("component", "IBKRWebsocketClient").Logger(),
 		done:          make(chan struct{})}, nil
+}
+
+func (client *IBKRWebsocketClient) Reconnect() error {
+	var err error
+	client.conn, _, err = websocket.DefaultDialer.Dial(client.url, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (client *IBKRWebsocketClient) Close() {
@@ -78,37 +76,22 @@ func (client *IBKRWebsocketClient) Write(message []byte) error {
 	return nil
 }
 
-func (client *IBKRWebsocketClient) StartListening() {
+func (client *IBKRWebsocketClient) StartListening(receiver chan interface{}) error {
 	for {
 		_, message, err := client.conn.ReadMessage()
 		if err != nil {
-			log.Println("Error reading message:", err)
-			return
+			client.logger.Err(err).Msg("Error reading message")
+			if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
+				client.logger.Debug().Msg("Connection closed normally, attempting to reconnect...")
+				if err = client.Reconnect(); err != nil {
+					client.logger.Err(err).Msg("Error reconnecting to websocket")
+					return err
+				}
+			} else {
+				return err
+			}
 		}
 
-		log.Printf("received: %s", message)
-
-		var stsMsg StsMessage
-		if err := json.Unmarshal(message, &stsMsg); err != nil {
-			log.Println("Error unmarshalling message:", err)
-			continue
-		}
-
-		// Check authenticated flag
-		if stsMsg.Topic == "sts" && stsMsg.Args.Authenticated {
-			fmt.Println("Authenticated! Proceeding to subscribe to historical data.")
-
-			client.Authenticated <- true
-
-			// request := HistoricalDataRequest{
-			// 	Conid:  "677037676",
-			// 	Period: "1d",
-			// 	Bar:    "1hour",
-			// 	Source: "trades",
-			// 	Format: "%o/%c/%h/%l",
-			// }
-
-			// client.SubscribeHistoricalData(request)
-		}
+		receiver <- message
 	}
 }

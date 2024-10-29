@@ -40,7 +40,7 @@ func (c *BinanceClient) SubscribeExchange(receiver chan interface{}) error {
 		Topic:  exchange.TopicOrderBook,
 		Symbol: "BTCUSDT",
 		Param: map[string]interface{}{
-			"Depth": 5,
+			"Interval": "3",
 		},
 	}
 
@@ -54,4 +54,15 @@ func (c *BinanceClient) SubscribeExchange(receiver chan interface{}) error {
 
 func (b *BinanceClient) Subscribe(sub exchange.Subscribe, receiver chan interface{}) error {
 	return b.Exchange.Subscribe(sub, receiver)
+}
+
+func (b *BinanceClient) ProcessMessage(receiver chan interface{}) {
+	for c := range receiver {
+		switch t := c.(type) {
+		case exchange.OrderBook:
+			b.logger.Debug().Msgf("binance bids: len:%v  first: %v", len(t.Bids), t.Bids[0].Price)
+			b.logger.Debug().Msgf("binance Asks: len:%v  first: %v", len(t.Asks), t.Asks[0].Price)
+			// a.logger.Debug().Msgf("binance asks: len:%v  %v", len(t.Asks), t.Asks)
+		}
+	}
 }

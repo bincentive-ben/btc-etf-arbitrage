@@ -22,17 +22,19 @@ var GetIServerMarketDataSnapshotCmd = &cobra.Command{
 	Short: "Get market data snapshot",
 	Long:  "Get market data snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
+		ibkrConfig := config.GetAppConfig().IbkrConfig
 		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
 		contractIDs := config.GetAppConfig().IbkrConfig.ContractIDList
 		fields := config.GetAppConfig().IbkrConfig.Fields
 		var marketDataSnapshot []common.MarketDataSnapshot
 		var err error
-		ibkrClient := ibkr.NewIBKRClient(logger)
+		ibkrClient := ibkr.NewIBKRClient(ibkrConfig, logger)
 
 		if IsWebsocket {
+			ibkrReceiver := make(chan interface{}, 128)
 			defer ibkrClient.WsClient.Close()
-			go ibkrClient.WsClient.StartListening()
+			go ibkrClient.WsClient.StartListening(ibkrReceiver)
 
 			select {
 			case <-ibkrClient.WsClient.Authenticated:
@@ -68,13 +70,16 @@ var GetIServerMarketDataHistoryCmd = &cobra.Command{
 	Short: "Get market data history",
 	Long:  "Get market data history",
 	Run: func(cmd *cobra.Command, args []string) {
+		ibkrConfig := config.GetAppConfig().IbkrConfig
 		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 
-		ibkrClient := ibkr.NewIBKRClient(logger)
+		ibkrClient := ibkr.NewIBKRClient(ibkrConfig, logger)
 		fmt.Println("ibkrClient:", ibkrClient)
 		if IsWebsocket {
 			defer ibkrClient.WsClient.Close()
-			go ibkrClient.WsClient.StartListening()
+			ibkrReceiver := make(chan interface{}, 128)
+			go ibkrClient.WsClient.StartListening(ibkrReceiver)
+			go ibkrClient.ProcessMessage(ibkrReceiver)
 
 			select {
 			case <-ibkrClient.WsClient.Authenticated:
