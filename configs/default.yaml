@@ -15,4 +15,4 @@ BinanceConfig:
   WsEndpoint: "wss://stream.binance.com"
   ApiKey: ""
   SecretKey: ""
-  Type: "Spot"
+  Type: "Margin"

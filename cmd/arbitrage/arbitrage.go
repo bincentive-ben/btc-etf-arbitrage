@@ -28,7 +28,7 @@ var RunCmd = &cobra.Command{
 
 		err = arb.StartAutoRefreshTraderConfig()
 		if err != nil {
-			logger.Err(err).Msg("Error start auto refreshing trader config")
+			logger.Error().Msgf("Error start auto refreshing trader config: %v", err)
 			panic(err)
 		}
 

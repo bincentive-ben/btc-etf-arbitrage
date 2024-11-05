@@ -1,6 +1,9 @@
 package binance
 
 import (
+	"context"
+	"strings"
+
 	"github.com/bincentive-ben/exchange"
 	"github.com/bincentive-ben/exchange/binance"
 	"github.com/bincentive-ben/exchange/common"
@@ -14,8 +17,14 @@ type BinanceClient struct {
 	logger   zerolog.Logger
 }
 
+var BinanceReceiver = make(chan interface{}, 128)
+
+func GetBinanceReceiver() chan interface{} {
+	return BinanceReceiver
+}
+
 // NewBinanceClient creates a new instance of BinanceClient
-func NewBinanceClient(logger zerolog.Logger) *BinanceClient {
+func NewBinanceClient(logger zerolog.Logger, exchangeType string) *BinanceClient {
 	cfg := config.GetAppConfig()
 	binanceConfig := cfg.BinanceConfig
 
@@ -27,8 +36,21 @@ func NewBinanceClient(logger zerolog.Logger) *BinanceClient {
 		Secret:       binanceConfig.SecretKey,
 	}
 
+	exchangeType = strings.ToLower(exchangeType)
+
+	var exchange *common.AsyncExchange
+	switch exchangeType {
+	case "spot":
+		exchange = binance.NewSpotExchange(account)
+	case "margin":
+		exchange = binance.NewMarginExchange(account)
+	default:
+		// use spot as default
+		exchange = binance.NewSpotExchange(account)
+	}
+
 	return &BinanceClient{
-		Exchange: binance.NewSpotExchange(account),
+		Exchange: exchange,
 		logger:   logger.With().Str("component", "binance").Logger(),
 	}
 }
@@ -56,7 +78,7 @@ func (b *BinanceClient) Subscribe(sub exchange.Subscribe, receiver chan interfac
 	return b.Exchange.Subscribe(sub, receiver)
 }
 
-func (b *BinanceClient) ProcessMessage(receiver chan interface{}) {
+func (b *BinanceClient) ProcessBinanceMessage(receiver chan interface{}) {
 	for c := range receiver {
 		switch t := c.(type) {
 		case exchange.OrderBook:
@@ -65,4 +87,31 @@ func (b *BinanceClient) ProcessMessage(receiver chan interface{}) {
 			// a.logger.Debug().Msgf("binance asks: len:%v  %v", len(t.Asks), t.Asks)
 		}
 	}
+}
+
+func (b *BinanceClient) GetBalances() ([]exchange.Balance, error) {
+
+	balances, err := b.Exchange.GetBalances(context.Background())
+	if err != nil {
+		b.logger.Error().Msgf("GetBalances error: %v", err)
+	}
+
+	// for _, balance := range balances {
+	// 	if balance.Currency == "USDT" {
+	// 		b.logger.Debug().Msgf("balance: %v", balance)
+	// 	}
+	// }
+
+	return balances, nil
+}
+
+func (b *BinanceClient) CreateOrder(symbol string, orderType exchange.OrderType, orderSide exchange.OrderSide, quanity float64, price float64, param map[string]interface{}) (exchange.Order, error) {
+	order, err := b.Exchange.CreateOrder(context.Background(), symbol, orderType, orderSide, quanity, price, param)
+	if err != nil {
+		b.logger.Error().Msgf("CreateOrder error: %v", err)
+		return exchange.Order{}, err
+	}
+
+	b.logger.Debug().Msgf("CreateOrder: %v", order)
+	return order, nil
 }

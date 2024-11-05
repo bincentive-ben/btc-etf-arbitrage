@@ -2,6 +2,7 @@ package ibkr_websocket
 
 import (
 	"crypto/tls"
+	"fmt"
 	"log"
 
 	"github.com/gorilla/websocket"
@@ -51,10 +52,13 @@ func (client *IBKRWebsocketClient) Close() {
 	client.conn.Close()
 }
 
-func (client *IBKRWebsocketClient) GetConn() *websocket.Conn {
-	return client.conn
+func (client *IBKRWebsocketClient) GetConn() (*websocket.Conn, error) {
+	if client.conn != nil {
+		return client.conn, nil
+	} else {
+		return nil, fmt.Errorf("websocket connection is nil")
+	}
 }
-
 func (client *IBKRWebsocketClient) Listen() {
 	defer close(client.done)
 	for {
@@ -68,30 +72,14 @@ func (client *IBKRWebsocketClient) Listen() {
 }
 
 func (client *IBKRWebsocketClient) Write(message []byte) error {
+	if client.conn == nil {
+		return fmt.Errorf("websocket connection is nil")
+	}
+
 	err := client.conn.WriteMessage(websocket.TextMessage, message)
 	if err != nil {
 		log.Println("write:", err)
 		return err
 	}
 	return nil
-}
-
-func (client *IBKRWebsocketClient) StartListening(receiver chan interface{}) error {
-	for {
-		_, message, err := client.conn.ReadMessage()
-		if err != nil {
-			client.logger.Err(err).Msg("Error reading message")
-			if websocket.IsCloseError(err, websocket.CloseNormalClosure) {
-				client.logger.Debug().Msg("Connection closed normally, attempting to reconnect...")
-				if err = client.Reconnect(); err != nil {
-					client.logger.Err(err).Msg("Error reconnecting to websocket")
-					return err
-				}
-			} else {
-				return err
-			}
-		}
-
-		receiver <- message
-	}
 }

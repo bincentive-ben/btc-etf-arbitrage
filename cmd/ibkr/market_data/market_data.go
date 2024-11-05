@@ -34,7 +34,7 @@ var GetIServerMarketDataSnapshotCmd = &cobra.Command{
 		if IsWebsocket {
 			ibkrReceiver := make(chan interface{}, 128)
 			defer ibkrClient.WsClient.Close()
-			go ibkrClient.WsClient.StartListening(ibkrReceiver)
+			go ibkrClient.StartListening(ibkrReceiver)
 
 			select {
 			case <-ibkrClient.WsClient.Authenticated:
@@ -77,9 +77,10 @@ var GetIServerMarketDataHistoryCmd = &cobra.Command{
 		fmt.Println("ibkrClient:", ibkrClient)
 		if IsWebsocket {
 			defer ibkrClient.WsClient.Close()
-			ibkrReceiver := make(chan interface{}, 128)
-			go ibkrClient.WsClient.StartListening(ibkrReceiver)
-			go ibkrClient.ProcessMessage(ibkrReceiver)
+
+			receiver := ibkr.GetIbkrReceiver()
+			go ibkrClient.StartListening(receiver)
+			go ibkrClient.ProcessIbkrMessage(receiver)
 
 			select {
 			case <-ibkrClient.WsClient.Authenticated:

@@ -42,7 +42,7 @@ var LogoutCmd = &cobra.Command{
 			return
 		}
 
-		logger.Info().Msgf("Logout %s", result)
+		logger.Info().Msgf("Logout %v", result)
 
 	},
 }
@@ -75,6 +75,24 @@ var TickleCmd = &cobra.Command{
 		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
 		ibrkClient := ibkr.NewIBKRClient(ibkrConfig, logger)
 		session, err := ibrkClient.HttpClient.Tickle()
+		if err != nil {
+			logger.Error().Msgf("%v", err)
+			return
+		}
+
+		logger.Info().Msgf("session: %v", session)
+	},
+}
+
+var ReauthenticateCmd = &cobra.Command{
+	Use:   "reauthenticate",
+	Short: "Reauthenticate to the Brokerage system",
+	Long:  "Reauthenticate to the Brokerage system",
+	Run: func(cmd *cobra.Command, args []string) {
+		ibkrConfig := config.GetAppConfig().IbkrConfig
+		logger := zerolog.New(os.Stderr).Level(zerolog.DebugLevel).With().Timestamp().Logger()
+		ibrkClient := ibkr.NewIBKRClient(ibkrConfig, logger)
+		session, err := ibrkClient.HttpClient.Reauthenticate()
 		if err != nil {
 			logger.Error().Msgf("%v", err)
 			return

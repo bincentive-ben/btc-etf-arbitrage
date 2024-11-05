@@ -13,4 +13,6 @@ var BinanceCmd = &cobra.Command{
 
 func init() {
 	BinanceCmd.AddCommand(marketDataCmd.GetTickerPrice)
+	BinanceCmd.AddCommand(marketDataCmd.CreateOrder)
+	BinanceCmd.AddCommand(marketDataCmd.GetBalancesCmd)
 }

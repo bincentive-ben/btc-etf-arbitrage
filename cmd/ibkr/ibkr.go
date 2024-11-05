@@ -21,6 +21,7 @@ func init() {
 		sessionCmd.LogoutCmd,
 		sessionCmd.ValidateCmd,
 		sessionCmd.TickleCmd,
+		sessionCmd.ReauthenticateCmd,
 		accountCmd.GetIServerAccountsCmd,
 		contractCmd.SearchIServerSecuritiesCmd,
 		marketDataCmd.GetIServerMarketDataSnapshotCmd,

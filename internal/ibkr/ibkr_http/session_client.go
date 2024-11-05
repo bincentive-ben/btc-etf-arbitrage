@@ -5,63 +5,64 @@ import (
 	"fmt"
 )
 
+type GetAuthenticationStatusResponse struct {
+	Authenticated bool   `json:"authenticated"`
+	Competing     bool   `json:"competing"`
+	Connected     bool   `json:"connected"`
+	Message       string `json:"message"`
+	MAC           string `json:"MAC"`
+	ServerInfo    struct {
+		ServerName    string `json:"serverName"`
+		ServerVersion string `json:"serverVersion"`
+	} `json:"serverInfo"`
+	HardwareInfo string `json:"hardware_info"`
+	Fail         string `json:"fail"`
+}
+
 // GetAuthenticationStatus get authentication status to the Brokerage system.
-func (c *IBKRHttpClient) GetAuthenticationStatus() (bool, error) {
-	type Response struct {
-		Authenticated bool   `json:"authenticated"`
-		Competing     bool   `json:"competing"`
-		Connected     bool   `json:"connected"`
-		Message       string `json:"message"`
-		MAC           string `json:"MAC"`
-		ServerInfo    struct {
-			ServerName    string `json:"serverName"`
-			ServerVersion string `json:"serverVersion"`
-		} `json:"serverInfo"`
-		HardwareInfo string `json:"hardware_info"`
-		Fail         string `json:"fail"`
-	}
+func (c *IBKRHttpClient) GetAuthenticationStatus() (GetAuthenticationStatusResponse, error) {
 
 	resp, err := c.client.R().
 		Post(fmt.Sprintf("%s/iserver/auth/status", c.url))
 
 	if err != nil {
-		return false, err
+		return GetAuthenticationStatusResponse{}, err
 	}
 
 	if resp.IsError() {
-		return false, fmt.Errorf("failed to get authentication status")
+		return GetAuthenticationStatusResponse{}, fmt.Errorf("failed to get authentication status: %v", resp)
 	}
 
-	var response Response
+	var response GetAuthenticationStatusResponse
 	err = json.Unmarshal(resp.Body(), &response)
 	if err != nil {
-		return false, err
+		return GetAuthenticationStatusResponse{}, err
 	}
 
-	return response.Authenticated, nil
+	return response, nil
 }
 
 // Logout logout from the Brokerage system.
-func (c *IBKRHttpClient) Logout() (string, error) {
+func (c *IBKRHttpClient) Logout() (bool, error) {
 	type Response struct {
-		Status string `json:"status"`
+		Status bool `json:"status"`
 	}
 
 	resp, err := c.client.R().
 		Post(fmt.Sprintf("%s/logout", c.url))
 
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
 	if resp.IsError() {
-		return "", fmt.Errorf("failed to log out")
+		return false, fmt.Errorf("failed to log out")
 	}
 
 	var response Response
 	err = json.Unmarshal(resp.Body(), &response)
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
 	return response.Status, nil
@@ -165,32 +166,27 @@ func (c *IBKRHttpClient) Tickle() (string, error) {
 }
 
 // Reauthenticate reauthenticates the session with the Brokerage system.
-func (c *IBKRHttpClient) Reauthenticate() (bool, error) {
+func (c *IBKRHttpClient) Reauthenticate() (string, error) {
 	type Response struct {
-		Authenticated bool     `json:"authenticated"`
-		Competing     bool     `json:"competing"`
-		Connected     bool     `json:"connected"`
-		Fail          string   `json:"fail"`
-		Message       string   `json:"message"`
-		Prompts       []string `json:"prompts"`
+		Message string `json:"message"`
 	}
 
 	resp, err := c.client.R().
 		Post(fmt.Sprintf("%s/iserver/reauthenticate", c.url))
 
 	if err != nil {
-		return false, err
+		return "", err
 	}
 
 	if resp.IsError() {
-		return false, fmt.Errorf("failed to reauthenticate session")
+		return "", fmt.Errorf("failed to reauthenticate session: %v", resp)
 	}
 
 	var response Response
 	err = json.Unmarshal(resp.Body(), &response)
 	if err != nil {
-		return false, err
+		return "", err
 	}
 
-	return response.Connected, nil
+	return response.Message, nil
 }
